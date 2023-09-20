@@ -1,4 +1,5 @@
 import { createTable } from "./module/tablePresupuesto.js";
+import { mostrarPagina } from "./module/paginacion.js";
 
 const d = document;
 const form = d.querySelector("#frm-caja");
@@ -21,6 +22,9 @@ addEventListener("DOMContentLoaded", async (e) => {
             window.location.reload();
         })
     })
+
+    let filas = document.querySelectorAll(".fila");
+    mostrarPagina(filas, 1, 10);
 })
 
 
@@ -33,6 +37,4 @@ form.addEventListener("submit", async (e) => {
         let res = await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/`, config);
         window.location.reload();
     }
-
 })
-

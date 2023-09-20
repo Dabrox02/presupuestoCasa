@@ -1,7 +1,7 @@
 export const createTable = (data) => {
     let tbody = document.createElement("TBODY");
     let rows = data.map(e => `
-    <tr>
+    <tr class="fila row-${e.id}">
         <td>${e.id}</td>
         <td>${e.caja}</td>
         <td>${e.valor}</td>

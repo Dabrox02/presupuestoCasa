@@ -1,15 +1,20 @@
 import { createTable } from "./module/tablePresupuesto.js";
-import { mostrarPagina } from "./module/paginacion.js";
+import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
 const form = d.querySelector("#frm-caja");
 const table = d.querySelector(".tabla-movimientos");
-let config = {
+const btn_prev = d.querySelector("#btn-prev");
+const btn_next = d.querySelector("#btn-next");
+var config = {
     headers: { "content-type": "application/json" },
 }
-let current_page = 1;
-let length = 10;
-let max_page;
+var table_config = {
+    "current_page": 1,
+    "length": 10,
+    "max_page": 1
+}
+var filas;
 
 addEventListener("DOMContentLoaded", async (e) => {
     let res = await (await fetch("https://6509d045f6553137159c106b.mockapi.io/Prespuesto")).json();
@@ -26,9 +31,9 @@ addEventListener("DOMContentLoaded", async (e) => {
         })
     })
 
-    let filas = document.querySelectorAll(".fila");
-    max_page = Math.ceil(filas.length / length);
-    mostrarPagina(filas, current_page, length);
+    filas = document.querySelectorAll(".fila");
+    table_config.max_page = Math.ceil(filas.length / table_config.length);
+    mostrarPagina(filas, table_config.current_page, table_config.length);
 })
 
 form.addEventListener("submit", async (e) => {
@@ -41,4 +46,13 @@ form.addEventListener("submit", async (e) => {
         window.location.reload();
     }
 })
+
+btn_prev.addEventListener("click", (e) => {
+    paginaAnterior(table_config);
+    mostrarPagina(filas, table_config.current_page, table_config.length);
+});
+btn_next.addEventListener("click", (e) => {
+    paginaSiguiente(table_config);
+    mostrarPagina(filas, table_config.current_page, table_config.length);
+});
 

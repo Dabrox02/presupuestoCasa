@@ -13,10 +13,10 @@ export const mostrarPagina = (elementos, paginaActual, elementosPorPagina) => {
     });
 }
 
-export const paginaAnterior = (current_page) => {
-    current_page > 1 ? current_page-- : current_page;
+export const paginaAnterior = (table_config) => {
+    table_config.current_page > 1 ? table_config.current_page-- : table_config.current_page;
 }
 
-export const paginaSiguiente = (current_page, max_length) => {
-    current_page < max_length ? current_page++ : current_page;
+export const paginaSiguiente = (table_config) => {
+    table_config.current_page < table_config.max_page ? table_config.current_page += 1 : table_config;
 }

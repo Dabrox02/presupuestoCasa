@@ -24,7 +24,15 @@ addEventListener("DOMContentLoaded", async (e) => {
 })
 
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    config["method"] = "POST";
+    let data = Object.fromEntries(new FormData(e.target));
+    if (!isNaN(Number(data.valor))) {
+        config["body"] = JSON.stringify(data);
+        let res = await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/`, config);
+        window.location.reload();
+    }
 
 })
 

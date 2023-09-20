@@ -1,4 +1,4 @@
-import { createTable, calcularTotal, cargarTabla } from "./module/tablePresupuesto.js";
+import { createTable, calcularMovimientos, cargarTabla } from "./module/tablePresupuesto.js";
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
@@ -64,9 +64,11 @@ addEventListener("DOMContentLoaded", async (e) => {
     filas = document.querySelectorAll(".fila");
     table_config.max_page = Math.ceil(filas.length / table_config.length);
     mostrarPagina(filas, table_config.current_page, table_config.length);
-    let valorTotal = calcularTotal(filas);
-    total.textContent = valorTotal;
-    
+    let movimientos = calcularMovimientos(filas);
+    ingresos.textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
+    egresos.textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
+    total.textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
+
 })
 
 form.addEventListener("submit", async (e) => {

@@ -1,10 +1,11 @@
 export const createTable = (data) => {
     let tbody = document.createElement("TBODY");
+    tbody.classList.add("contenido")
     let rows = data.map(e => `
     <tr class="fila">
         <td>${e.id}</td>
         <td class="movimiento">${e.caja}</td>
-        <td class="valor">${e.valor}</td>
+        <td class="valor" data-value="${e.valor}">$ ${e.valor}</td>
         <td>
             <button type="button" class="del-caja border-0" data-del="${e.id}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -23,10 +24,14 @@ export const createTable = (data) => {
     return tbody;
 }
 
-export const calcularTotal = (filas) => {
-    let valores = [...filas].map(e => e.querySelector(".movimiento").textContent === "egreso" ? -Number(e.querySelector(".valor").textContent) : e.querySelector(".movimiento").textContent === "ingreso" ? Number(e.querySelector(".valor").textContent) : 0);
-    let total = valores.reduce((prev, curr) => prev + curr);
-    return total;
+export const calcularMovimientos = (filas) => {
+    if (filas.length === 0) return {};
+    let ingresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "ingreso" ? Number(e.querySelector(".valor").dataset.value) : 0);
+    let egresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "egreso" ? Number(e.querySelector(".valor").dataset.value) : 0);
+
+    ingresos = ingresos.reduce((prev, curr) => prev + curr);
+    egresos = egresos.reduce((prev, curr) => prev + curr);
+    return [ingresos, egresos, (ingresos - egresos)];
 }
 
 export const cargarTabla = async ({ uri, config, table }) => {

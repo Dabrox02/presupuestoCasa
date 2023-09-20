@@ -34,6 +34,7 @@
             <div>
                 <input id="inp-search" type="number" name="buscar" placeholder="Id a buscar..." />
             </div>
+
             <table class="tabla-movimientos table table-hover">
                 <thead>
                     <tr>
@@ -66,13 +67,15 @@
                                 </svg>
                             </button>
                         </td>
-                        <td>
-                            <b>Total</b>
-                        </td>
-                        <td id="total"></td>
                     </tr>
                 </tfoot>
             </table>
+
+            <div class="movimientos d-flex flex-row flex-wrap">
+                <span class="w-100"><b>Ingresos: </b><span id="ingresos"></span></span>
+                <span class="w-100"><b>Egresos: </b><span id="egresos"></span></span>
+                <span class="w-100"><b>Total: </b> <span id="total"></span></span>
+            </div>
 
             <dialog id="modal-edit">
                 <form id="frm-edit" method="PUT">

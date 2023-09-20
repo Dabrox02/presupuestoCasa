@@ -1,4 +1,4 @@
-import { createTable } from "./module/tablePresupuesto.js";
+import { createTable, calcularTotal } from "./module/tablePresupuesto.js";
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
@@ -6,6 +6,7 @@ const form = d.querySelector("#frm-caja");
 const table = d.querySelector(".tabla-movimientos");
 const btn_prev = d.querySelector("#btn-prev");
 const btn_next = d.querySelector("#btn-next");
+const total = d.querySelector("#total");
 var config = {
     headers: { "content-type": "application/json" },
 }
@@ -20,9 +21,10 @@ addEventListener("DOMContentLoaded", async (e) => {
     let res = await (await fetch("https://6509d045f6553137159c106b.mockapi.io/Prespuesto")).json();
     let tbody = createTable(res);
     table.insertAdjacentElement("beforeend", tbody);
-    let btns = d.querySelectorAll(".del-caja");
+    let btns_del = d.querySelectorAll(".del-caja");
+    let btns_edit = d.querySelectorAll(".edit-caja");
 
-    btns.forEach((e) => {
+    btns_del.forEach((e) => {
         config["method"] = "DELETE";
         let valor = e.dataset.del;
         e.addEventListener("click", async (e) => {
@@ -34,6 +36,7 @@ addEventListener("DOMContentLoaded", async (e) => {
     filas = document.querySelectorAll(".fila");
     table_config.max_page = Math.ceil(filas.length / table_config.length);
     mostrarPagina(filas, table_config.current_page, table_config.length);
+    total.textContent = calcularTotal(filas);
 })
 
 form.addEventListener("submit", async (e) => {

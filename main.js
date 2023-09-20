@@ -26,6 +26,7 @@ var table_config = {
 var filas;
 
 addEventListener("DOMContentLoaded", async (e) => {
+
     await cargarTabla({
         "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto`,
         "table": table
@@ -37,16 +38,8 @@ addEventListener("DOMContentLoaded", async (e) => {
         config["method"] = "DELETE";
         let valor = e.dataset.del;
         e.addEventListener("click", async (e) => {
-            res = await (await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${valor}`, config)).json();
+            await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${valor}`, config);
             window.location.reload();
-        })
-    })
-
-    btn_close_modal.forEach((e) => {
-        e.addEventListener("click", (j) => {
-            const dialogo = j.target.closest("dialog");
-            if (dialogo) modal_edit.close();
-            form_edit.removeAttribute("data-edit");
         })
     })
 
@@ -58,10 +51,22 @@ addEventListener("DOMContentLoaded", async (e) => {
         })
     })
 
+    btn_close_modal.forEach((e) => {
+        e.addEventListener("click", (j) => {
+            const dialogo = j.target.closest("dialog");
+            form_edit.reset();
+            form_edit.removeAttribute("data-edit");
+            if (dialogo) modal_edit.close();
+        })
+    })
+
+
     filas = document.querySelectorAll(".fila");
     table_config.max_page = Math.ceil(filas.length / table_config.length);
     mostrarPagina(filas, table_config.current_page, table_config.length);
-    total.textContent = calcularTotal(filas);
+    let valorTotal = calcularTotal(filas);
+    total.textContent = valorTotal;
+    
 })
 
 form.addEventListener("submit", async (e) => {
@@ -85,6 +90,21 @@ form_edit.addEventListener("submit", async (e) => {
         if (!form_edit.dataset.edit) return;
         let res = await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${form_edit.dataset.edit}`, config);
         window.location.reload();
+    }
+})
+
+input_search.addEventListener("input", async (e) => {
+    e.preventDefault();
+    const valorInput = input_search.value;
+    if (valorInput !== "") {
+        await cargarTabla({
+            "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${valorInput}`, "table": table
+        });
+    } else {
+        await cargarTabla({
+            "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto/`, "table": table
+        });
+        mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 })
 

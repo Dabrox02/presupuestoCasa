@@ -7,6 +7,9 @@ const table = d.querySelector(".tabla-movimientos");
 let config = {
     headers: { "content-type": "application/json" },
 }
+let current_page = 1;
+let length = 10;
+let max_page;
 
 addEventListener("DOMContentLoaded", async (e) => {
     let res = await (await fetch("https://6509d045f6553137159c106b.mockapi.io/Prespuesto")).json();
@@ -24,9 +27,9 @@ addEventListener("DOMContentLoaded", async (e) => {
     })
 
     let filas = document.querySelectorAll(".fila");
-    mostrarPagina(filas, 1, 10);
+    max_page = Math.ceil(filas.length / length);
+    mostrarPagina(filas, current_page, length);
 })
-
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -38,3 +41,4 @@ form.addEventListener("submit", async (e) => {
         window.location.reload();
     }
 })
+

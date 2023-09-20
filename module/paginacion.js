@@ -12,3 +12,11 @@ export const mostrarPagina = (elementos, paginaActual, elementosPorPagina) => {
         contenedor.insertAdjacentElement("beforeend", e);
     });
 }
+
+export const paginaAnterior = (current_page) => {
+    current_page > 1 ? current_page-- : current_page;
+}
+
+export const paginaSiguiente = (current_page, max_length) => {
+    current_page < max_length ? current_page++ : current_page;
+}

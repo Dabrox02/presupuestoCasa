@@ -28,3 +28,13 @@ export const calcularTotal = (filas) => {
     let total = valores.reduce((prev, curr) => prev + curr);
     return total;
 }
+
+export const cargarTabla = async ({ uri, config, table }) => {
+    let res = await fetch(uri, config);
+    if (res.ok) {
+        let data = await res.json();
+        data = data.constructor.name === "Array" ? data : [data];
+        let tbody = createTable(data);
+        table.querySelector("tbody").replaceWith(tbody);
+    }
+}

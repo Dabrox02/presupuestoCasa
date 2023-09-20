@@ -1,15 +1,20 @@
-import { createTable, calcularTotal } from "./module/tablePresupuesto.js";
+import { createTable, calcularTotal, cargarTabla } from "./module/tablePresupuesto.js";
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
 const form = d.querySelector("#frm-caja");
 const form_edit = d.querySelector("#frm-edit");
+const form_search = d.querySelector("#frm-search");
+const input_search = d.querySelector("#inp-search");
 const modal_edit = d.querySelector("#modal-edit");
 const btn_close_modal = d.querySelectorAll(".close-modal");
 const table = d.querySelector(".tabla-movimientos");
 const btn_prev = d.querySelector("#btn-prev");
 const btn_next = d.querySelector("#btn-next");
+const ingresos = d.querySelector("#ingresos");
+const egresos = d.querySelector("#egresos");
 const total = d.querySelector("#total");
+
 var config = {
     headers: { "content-type": "application/json" },
 }
@@ -21,9 +26,10 @@ var table_config = {
 var filas;
 
 addEventListener("DOMContentLoaded", async (e) => {
-    let res = await (await fetch("https://6509d045f6553137159c106b.mockapi.io/Prespuesto")).json();
-    let tbody = createTable(res);
-    table.insertAdjacentElement("beforeend", tbody);
+    await cargarTabla({
+        "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto`,
+        "table": table
+    });
     let btns_del = d.querySelectorAll(".del-caja");
     let btns_edit = d.querySelectorAll(".edit-caja");
 

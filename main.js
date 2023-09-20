@@ -4,7 +4,6 @@ import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginac
 const d = document;
 const form = d.querySelector("#frm-caja");
 const form_edit = d.querySelector("#frm-edit");
-const form_search = d.querySelector("#frm-search");
 const input_search = d.querySelector("#inp-search");
 const modal_edit = d.querySelector("#modal-edit");
 const btn_close_modal = d.querySelectorAll(".close-modal");
@@ -68,7 +67,6 @@ addEventListener("DOMContentLoaded", async (e) => {
     ingresos.textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
     egresos.textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
     total.textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
-
 })
 
 form.addEventListener("submit", async (e) => {

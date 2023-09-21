@@ -24,7 +24,7 @@ Hay algunos requisitos y consideraciones que el cliente debe tener en cuenta par
 
 
 ## Resultado
-<a href="">
+<a href="https://dabrox02.github.io/proyecto-presupuesto-casa/" target="_blank">
     Click Aqui para Ver
     <img src="readmeAssets/RESULTADO.png">
 </a>

@@ -37,7 +37,7 @@ addEventListener("DOMContentLoaded", async (e) => {
         config["method"] = "DELETE";
         let valor = e.dataset.del;
         e.addEventListener("click", async (e) => {
-            await fetch(`http://localhost:5855/presupuesto${valor}`, config);
+            await fetch(`http://localhost:5855/presupuesto/${valor}`, config);
             window.location.reload();
         })
     })
@@ -99,7 +99,7 @@ input_search.addEventListener("input", async (e) => {
     const valorInput = input_search.value;
     if (valorInput !== "") {
         await cargarTabla({
-            "uri": `http://localhost:5855/presupuesto${valorInput}`, "table": table
+            "uri": `http://localhost:5855/presupuesto/${valorInput}`, "table": table
         });
     } else {
         await cargarTabla({

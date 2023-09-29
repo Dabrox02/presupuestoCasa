@@ -84,10 +84,10 @@
 
             <dialog id="modal-edit">
                 <form id="frm-edit" method="PUT">
-                    <input type="number" name="valor" placeholder="Ingrese el monto." required>
+                    <input id="monto-edit" type="number" name="valor" placeholder="Ingrese el monto." required>
                     <input type="radio" id="radio-ingreso-edit" name="caja" value="ingreso">
                     <label for="radio-ingreso-edit">Ingreso</label>
-                    <input type="radio" id="adio-egreso-edit" name="caja" value="egreso">
+                    <input type="radio" id="radio-egreso-edit" name="caja" value="egreso">
                     <label for="radio-egreso-edit">Egreso</label>
                     <input type="submit" value="Calcular" class="btn btn-primary">
                     <button class="close-modal btn border-0">

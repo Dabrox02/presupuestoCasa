@@ -43,7 +43,7 @@ d.addEventListener("submit", async (e) => {
         if (!isNaN(Number(data.valor))) {
             config["body"] = JSON.stringify(data);
             let res = await fetch(`http://localhost:5855/presupuesto`, config);
-            form.reset();
+            $("#frm-caja").reset();
             window.location.reload();
         }
     }
@@ -52,12 +52,11 @@ d.addEventListener("submit", async (e) => {
         e.preventDefault();
         config["method"] = "PUT";
         let data = Object.fromEntries(new FormData(e.target));
-        console.log(data);
         if (!isNaN(Number(data.valor))) {
+            if (!e.target.dataset.edit) return;
             config["body"] = JSON.stringify(data);
-            if (!form_edit.dataset.edit) return;
-            let res = await fetch(`http://localhost:5855/presupuesto/${form_edit.dataset.edit}`, config);
-            window.location.reload();
+            let res = await fetch(`http://localhost:5855/presupuesto/${e.target.dataset.edit}`, config);
+            window.location.reload()
         }
     }
 })
@@ -93,6 +92,10 @@ d.addEventListener("click", async (e) => {
         let btn = e.target.closest(".edit-caja");
         $("#frm-edit").dataset.edit = btn.dataset.edit;
         let res = await (await fetch(`http://localhost:5855/presupuesto/${btn.dataset.edit}`)).json();
+        console.log(res);
+        console.log($("#frm-edit input#monto-edit"));
+        $("#frm-edit input#monto-edit").value = res.valor;
+        res.caja == "ingreso" ? $("#frm-edit input#radio-ingreso-edit").setAttribute("checked", "") : $("#frm-edit input#radio-egreso-edit").setAttribute("checked", "");
         $("#modal-edit").showModal();
     }
 })

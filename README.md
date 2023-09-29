@@ -85,7 +85,13 @@ En tu terminal, ejecuta `json-server` y especifica el archivo JSON que deseas ut
 json-server --watch db.json --port 5855
 ```
 
-Si clonas este repositorio, puedes utilizar el siguiente comando:
+## Inicializacion del proyecto
+Si clonas este repositorio, debes utilizar el siguiente comando para instalar las dependencias necesarias:
+```bash
+npm init
+```
+
+Una vez instaladas, para ejecutar el json-server con la configuracion antes mencionada utiliza el siguiente comando:
 ```bash
 npm run dev
 ```

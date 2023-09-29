@@ -2,14 +2,9 @@ import { createTable, calcularMovimientos, cargarTabla } from "./module/tablePre
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
-const form = d.querySelector("#frm-caja");
-const form_edit = d.querySelector("#frm-edit");
+const $ = (e) => d.querySelector(e);
 const input_search = d.querySelector("#inp-search");
-const modal_edit = d.querySelector("#modal-edit");
-const btn_close_modal = d.querySelectorAll(".close-modal");
 const table = d.querySelector(".tabla-movimientos");
-const btn_prev = d.querySelector("#btn-prev");
-const btn_next = d.querySelector("#btn-next");
 const ingresos = d.querySelector("#ingresos");
 const egresos = d.querySelector("#egresos");
 const total = d.querySelector("#total");
@@ -17,6 +12,7 @@ const total = d.querySelector("#total");
 var config = {
     headers: { "content-type": "application/json" },
 }
+
 var table_config = {
     "current_page": 1,
     "length": 10,
@@ -25,40 +21,10 @@ var table_config = {
 var filas;
 
 addEventListener("DOMContentLoaded", async (e) => {
-
     await cargarTabla({
         "uri": `http://localhost:5855/presupuesto`,
         "table": table
     });
-    let btns_del = d.querySelectorAll(".del-caja");
-    let btns_edit = d.querySelectorAll(".edit-caja");
-
-    btns_del.forEach((e) => {
-        config["method"] = "DELETE";
-        let valor = e.dataset.del;
-        e.addEventListener("click", async (e) => {
-            await fetch(`http://localhost:5855/presupuesto/${valor}`, config);
-            window.location.reload();
-        })
-    })
-
-    btns_edit.forEach((e) => {
-        let valor = e.dataset.edit;
-        e.addEventListener("click", async (j) => {
-            form_edit.dataset.edit = e.dataset.edit;
-            modal_edit.showModal();
-        })
-    })
-
-    btn_close_modal.forEach((e) => {
-        e.addEventListener("click", (j) => {
-            const dialogo = j.target.closest("dialog");
-            form_edit.reset();
-            form_edit.removeAttribute("data-edit");
-            if (dialogo) modal_edit.close();
-        })
-    })
-
 
     filas = document.querySelectorAll(".fila");
     table_config.max_page = Math.ceil(filas.length / table_config.length);
@@ -69,30 +35,68 @@ addEventListener("DOMContentLoaded", async (e) => {
     total.textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
 })
 
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    config["method"] = "POST";
-    let data = Object.fromEntries(new FormData(e.target));
-    if (!isNaN(Number(data.valor))) {
-        config["body"] = JSON.stringify(data);
-        let res = await fetch(`http://localhost:5855/presupuesto`, config);
-        form.reset();
-        window.location.reload();
+d.addEventListener("submit", async (e) => {
+    if (e.target.matches("#frm-caja")) {
+        e.preventDefault();
+        config["method"] = "POST";
+        let data = Object.fromEntries(new FormData(e.target));
+        if (!isNaN(Number(data.valor))) {
+            config["body"] = JSON.stringify(data);
+            let res = await fetch(`http://localhost:5855/presupuesto`, config);
+            form.reset();
+            window.location.reload();
+        }
+    }
+
+    if (e.target.matches("#frm-edit")) {
+        e.preventDefault();
+        config["method"] = "PUT";
+        let data = Object.fromEntries(new FormData(e.target));
+        console.log(data);
+        if (!isNaN(Number(data.valor))) {
+            config["body"] = JSON.stringify(data);
+            if (!form_edit.dataset.edit) return;
+            let res = await fetch(`http://localhost:5855/presupuesto/${form_edit.dataset.edit}`, config);
+            window.location.reload();
+        }
     }
 })
 
-form_edit.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    config["method"] = "PUT";
-    let data = Object.fromEntries(new FormData(e.target));
-    console.log(data);
-    if (!isNaN(Number(data.valor))) {
-        config["body"] = JSON.stringify(data);
-        if (!form_edit.dataset.edit) return;
-        let res = await fetch(`http://localhost:5855/presupuesto/${form_edit.dataset.edit}`, config);
+d.addEventListener("click", async (e) => {
+    if (e.target.matches("#btn-prev")) {
+        paginaAnterior(table_config);
+        mostrarPagina(filas, table_config.current_page, table_config.length);
+    }
+
+    if (e.target.matches("#btn-next")) {
+        paginaSiguiente(table_config);
+        mostrarPagina(filas, table_config.current_page, table_config.length);
+    }
+
+    if (e.target.matches(".close-modal, .close-modal *")) {
+        const dialogo = e.target.closest("dialog");
+        $("#frm-edit").reset();
+        $("#frm-edit").removeAttribute("data-edit");
+        if (dialogo) $("#modal-edit").close();
+    }
+
+    if (e.target.matches(".del-caja, .del-caja *")) {
+        let btn = e.target.closest(".del-caja");
+        config["method"] = "DELETE";
+        await fetch(`http://localhost:5855/presupuesto/${btn.dataset.del}`, {
+            method: "DELETE"
+        });
         window.location.reload();
     }
+
+    if (e.target.matches(".edit-caja, .edit-caja *")) {
+        let btn = e.target.closest(".edit-caja");
+        $("#frm-edit").dataset.edit = btn.dataset.edit;
+        let res = await (await fetch(`http://localhost:5855/presupuesto/${btn.dataset.edit}`)).json();
+        $("#modal-edit").showModal();
+    }
 })
+
 
 input_search.addEventListener("input", async (e) => {
     e.preventDefault();
@@ -108,13 +112,3 @@ input_search.addEventListener("input", async (e) => {
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 })
-
-
-btn_prev.addEventListener("click", (e) => {
-    paginaAnterior(table_config);
-    mostrarPagina(filas, table_config.current_page, table_config.length);
-});
-btn_next.addEventListener("click", (e) => {
-    paginaSiguiente(table_config);
-    mostrarPagina(filas, table_config.current_page, table_config.length);
-});

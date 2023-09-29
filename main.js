@@ -27,7 +27,7 @@ var filas;
 addEventListener("DOMContentLoaded", async (e) => {
 
     await cargarTabla({
-        "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto`,
+        "uri": `http://localhost:5855/presupuesto`,
         "table": table
     });
     let btns_del = d.querySelectorAll(".del-caja");
@@ -37,7 +37,7 @@ addEventListener("DOMContentLoaded", async (e) => {
         config["method"] = "DELETE";
         let valor = e.dataset.del;
         e.addEventListener("click", async (e) => {
-            await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${valor}`, config);
+            await fetch(`http://localhost:5855/presupuesto${valor}`, config);
             window.location.reload();
         })
     })
@@ -75,7 +75,8 @@ form.addEventListener("submit", async (e) => {
     let data = Object.fromEntries(new FormData(e.target));
     if (!isNaN(Number(data.valor))) {
         config["body"] = JSON.stringify(data);
-        let res = await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/`, config);
+        let res = await fetch(`http://localhost:5855/presupuesto`, config);
+        form.reset();
         window.location.reload();
     }
 })
@@ -88,7 +89,7 @@ form_edit.addEventListener("submit", async (e) => {
     if (!isNaN(Number(data.valor))) {
         config["body"] = JSON.stringify(data);
         if (!form_edit.dataset.edit) return;
-        let res = await fetch(`https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${form_edit.dataset.edit}`, config);
+        let res = await fetch(`http://localhost:5855/presupuesto/${form_edit.dataset.edit}`, config);
         window.location.reload();
     }
 })
@@ -98,11 +99,11 @@ input_search.addEventListener("input", async (e) => {
     const valorInput = input_search.value;
     if (valorInput !== "") {
         await cargarTabla({
-            "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto/${valorInput}`, "table": table
+            "uri": `http://localhost:5855/presupuesto${valorInput}`, "table": table
         });
     } else {
         await cargarTabla({
-            "uri": `https://6509d045f6553137159c106b.mockapi.io/Prespuesto/`, "table": table
+            "uri": `http://localhost:5855/presupuesto`, "table": table
         });
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }

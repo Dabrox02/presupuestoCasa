@@ -4,7 +4,7 @@ export const createTable = (data) => {
     let rows = data.map(e => `
     <tr class="fila">
         <td>${e.id}</td>
-        <td class="movimiento">${e.caja}</td>
+        <td class="movimiento text-capitalize">${e.caja}</td>
         <td class="valor" data-value="${e.valor}">$ ${e.valor}</td>
         <td>
             <button type="button" class="del-caja border-0" data-del="${e.id}">
@@ -26,7 +26,7 @@ export const createTable = (data) => {
 
 export const calcularMovimientos = (filas) => {
     if (filas.length === 0) return {};
-    let ingresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "ingreso" ? Number(e.querySelector(".valor").dataset.value) : 0);
+    let ingresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "iNGRE" ? Number(e.querySelector(".valor").dataset.value) : 0);
     let egresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "egreso" ? Number(e.querySelector(".valor").dataset.value) : 0);
 
     ingresos = ingresos.reduce((prev, curr) => prev + curr);

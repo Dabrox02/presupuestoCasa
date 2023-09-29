@@ -2,6 +2,7 @@ import { createTable, calcularMovimientos, cargarTabla } from "./module/tablePre
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
+const URI = "https://6509d045f6553137159c106b.mockapi.io/presupuesto";
 const form = d.querySelector("#frm-caja");
 const form_edit = d.querySelector("#frm-edit");
 const input_search = d.querySelector("#inp-search");
@@ -27,7 +28,7 @@ var filas;
 addEventListener("DOMContentLoaded", async (e) => {
 
     await cargarTabla({
-        "uri": `http://localhost:5855/presupuesto`,
+        "uri": URI,
         "table": table
     });
     let btns_del = d.querySelectorAll(".del-caja");
@@ -37,7 +38,7 @@ addEventListener("DOMContentLoaded", async (e) => {
         config["method"] = "DELETE";
         let valor = e.dataset.del;
         e.addEventListener("click", async (e) => {
-            await fetch(`http://localhost:5855/presupuesto/${valor}`, config);
+            await fetch(`${URI}/${valor}`, config);
             window.location.reload();
         })
     })
@@ -75,7 +76,7 @@ form.addEventListener("submit", async (e) => {
     let data = Object.fromEntries(new FormData(e.target));
     if (!isNaN(Number(data.valor))) {
         config["body"] = JSON.stringify(data);
-        let res = await fetch(`http://localhost:5855/presupuesto`, config);
+        let res = await fetch(URI, config);
         form.reset();
         window.location.reload();
     }
@@ -89,7 +90,7 @@ form_edit.addEventListener("submit", async (e) => {
     if (!isNaN(Number(data.valor))) {
         config["body"] = JSON.stringify(data);
         if (!form_edit.dataset.edit) return;
-        let res = await fetch(`http://localhost:5855/presupuesto/${form_edit.dataset.edit}`, config);
+        let res = await fetch(`${URI}/${form_edit.dataset.edit}`, config);
         window.location.reload();
     }
 })
@@ -99,11 +100,11 @@ input_search.addEventListener("input", async (e) => {
     const valorInput = input_search.value;
     if (valorInput !== "") {
         await cargarTabla({
-            "uri": `http://localhost:5855/presupuesto/${valorInput}`, "table": table
+            "uri": `${URI}/${valorInput}`, "table": table
         });
     } else {
         await cargarTabla({
-            "uri": `http://localhost:5855/presupuesto`, "table": table
+            "uri": URI, "table": table
         });
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }

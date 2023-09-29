@@ -22,78 +22,9 @@ Hay algunos requisitos y consideraciones que el cliente debe tener en cuenta par
   - [Mozilla Firefox](https://www.mozilla.org/es-ES/firefox/new/)
   - [Google Chrome](https://www.google.com/chrome/)
 
+### Interaccion con la API MockAPI
+MockAPI es una herramienta web que permite la creacion de APIs de prueba, para el desarrollo de este proyecto se utilizo una api cuya estructura de datos es la siguiente:
 
-## Guía de Instalación y Configuración de json-server
-### Requisitos previos:
-- **NVM** es una herramienta que te permite administrar múltiples versiones de Node.js en tu máquina.
-
-**Instalación de NVM en Linux y macOS**
-1. Abre tu terminal.
-2. Utiliza `curl` o `wget` para descargar el script de instalación de NVM desde el repositorio oficial de GitHub. Puedes usar uno de los siguientes comandos:
-
-   Utilizando `curl`:
-
-   ```bash
-   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-   ```
-
-   Utilizando `wget`:
-
-   ```bash
-   wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-   ```
-
-   Asegúrate de verificar la URL en el comando con la versión actual de NVM en [GitHub](https://github.com/nvm-sh/nvm).
-
-3. Después de ejecutar el comando, seguirás las instrucciones en la terminal para completar la instalación.
-
-4. Cierra y vuelve a abrir tu terminal o ejecuta `source ~/.bashrc` o `source ~/.zshrc` (dependiendo de tu shell) para cargar NVM en tu sesión actual.
-
-***
-**Uso de NVM**
-
-Una vez instalado NVM, puedes usar los siguientes comandos para gestionar las versiones de Node.js en tu sistema:
-
-- Para instalar una versión específica de Node.js, por ejemplo, Node.js ultima version estable:
-  ```bash
-  nvm install --lts
-  ```
-- Para seleccionar una versión específica de Node.js para usar:
-
-  ```bash
-  nvm use <version>
-  ```
-Recuerda consultar la [documentación oficial de NVM](https://github.com/nvm-sh/nvm) para obtener más detalles y opciones de configuración avanzadas.
-***
-
-## Instalación json-server
-
-Abre tu terminal y ejecuta el siguiente comando para instalar `json-server`:
-
-```bash
-npm install -E -D json-server
-```
-
-Esto instalará `json-server` con la ultima version estable de acuerdo a nuestra versión de Node.js
-
-## Ejecución de json-server
-
-**Inicia json-server:**
-En tu terminal, ejecuta `json-server` y especifica el archivo JSON que deseas utilizar como fuente de datos:
-
-```bash
-json-server --watch db.json --port 5855
-```
-
-Si clonas este repositorio, puedes utilizar el siguiente comando:
-```bash
-npm run dev
-```
-
-Esto iniciará `json-server` y lo configurará para escuchar en el puerto `5855`. Ahora, la API REST simulada estará disponible en `http://localhost:5855`.
-
-
-### Interaccion con la API json-server
 ### Esquema de los datos
 | Campo | Tipo      |
 | ----- | --------- |
@@ -102,12 +33,12 @@ Esto iniciará `json-server` y lo configurará para escuchar en el puerto `5855`
 | valor | NUMBER    |
 
 ***
-**API URI:** `http://localhost:5855/`
+**API URI:** `https://6509d045f6553137159c106b.mockapi.io/`
 
 **Acceso a la API:**
 Puedes acceder a la API a través del **endpoint** `presupuesto`:
 ```bash
-http://localhost:5855/presupuesto
+https://6509d045f6553137159c106b.mockapi.io/presupuesto
 ```
 
 ## Uso de la Aplicación

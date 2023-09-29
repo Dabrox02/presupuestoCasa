@@ -44,10 +44,12 @@ addEventListener("DOMContentLoaded", async (e) => {
     })
 
     btns_edit.forEach((e) => {
-        let valor = e.dataset.edit;
         e.addEventListener("click", async (j) => {
             form_edit.dataset.edit = e.dataset.edit;
             modal_edit.showModal();
+            let data = await (await fetch(`${URI}/${e.dataset.edit}`)).json();
+            d.querySelector("#monto-edit").value = data.valor;
+            data.caja == "ingreso" ? d.querySelector("#radio-ingreso-edit").setAttribute("checked", "") : d.querySelector("#radio-egreso-edit").setAttribute("checked", "");
         })
     })
 
@@ -86,7 +88,6 @@ form_edit.addEventListener("submit", async (e) => {
     e.preventDefault();
     config["method"] = "PUT";
     let data = Object.fromEntries(new FormData(e.target));
-    console.log(data);
     if (!isNaN(Number(data.valor))) {
         config["body"] = JSON.stringify(data);
         if (!form_edit.dataset.edit) return;

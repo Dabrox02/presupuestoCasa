@@ -1,4 +1,4 @@
-import { createTable, calcularMovimientos, cargarTabla } from "./module/tablePresupuesto.js";
+import { calcularMovimientos, cargarTabla } from "./module/tablePresupuesto.js";
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;

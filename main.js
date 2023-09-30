@@ -1,47 +1,36 @@
-import { calcularMovimientos, cargarTabla } from "./module/tablePresupuesto.js";
+import { calcularMovimientos, mostrarBusqueda } from "./module/tablePresupuesto.js";
 import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
 
 const d = document;
 const $ = (e) => document.querySelector(e);
 const URI = "http://localhost:5855/presupuesto";
-const table = d.querySelector(".tabla-movimientos");
-const ingresos = d.querySelector("#ingresos");
-const egresos = d.querySelector("#egresos");
-const total = d.querySelector("#total");
 
-var config = {
-    headers: { "content-type": "application/json" },
-}
 var table_config = {
     "current_page": 1,
     "length": 10,
     "max_page": 1
 }
-var filas;
 
 addEventListener("DOMContentLoaded", async (e) => {
-    await cargarTabla({
-        "uri": URI,
-        "table": table
-    });
-
-    filas = document.querySelectorAll(".fila");
+    let filas = await (await fetch(URI)).json();
     table_config.max_page = Math.ceil(filas.length / table_config.length);
     mostrarPagina(filas, table_config.current_page, table_config.length);
     let movimientos = calcularMovimientos(filas);
-    ingresos.textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
-    egresos.textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
-    total.textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
+    $("#ingresos").textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
+    $("#egresos").textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
+    $("#total").textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
 })
 
 d.addEventListener("click", async (e) => {
     if (e.target.matches("#btn-prev, #btn-prev *")) {
         paginaAnterior(table_config);
+        let filas = await (await fetch(URI)).json();
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 
     if (e.target.matches("#btn-next, #btn-next *")) {
         paginaSiguiente(table_config);
+        let filas = await (await fetch(URI)).json();
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 
@@ -103,13 +92,12 @@ d.addEventListener("input", async (e) => {
         e.preventDefault();
         const valorInput = e.target.value;
         if (valorInput !== "") {
-            await cargarTabla({
-                "uri": `${URI}/${valorInput}`, "table": table
-            });
+            let data = await (await fetch(URI)).json();
+
+            console.log(data);
+
         } else {
-            await cargarTabla({
-                "uri": URI, "table": table
-            });
+            let filas = await (await fetch(URI)).json();
             mostrarPagina(filas, table_config.current_page, table_config.length);
         }
     }

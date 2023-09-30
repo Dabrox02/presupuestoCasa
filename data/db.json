@@ -1,3 +1,64 @@
 {
-  "presupuesto": []
+  "presupuesto": [
+    {
+      "valor": "1000",
+      "caja": "ingreso",
+      "id": 1
+    },
+    {
+      "valor": "1500",
+      "caja": "ingreso",
+      "id": 2
+    },
+    {
+      "valor": "2000",
+      "caja": "egreso",
+      "id": 3
+    },
+    {
+      "valor": "1100",
+      "caja": "ingreso",
+      "id": 4
+    },
+    {
+      "valor": "5600",
+      "caja": "ingreso",
+      "id": 5
+    },
+    {
+      "valor": "1500",
+      "caja": "ingreso",
+      "id": 6
+    },
+    {
+      "valor": "2000",
+      "caja": "egreso",
+      "id": 7
+    },
+    {
+      "valor": "1500",
+      "caja": "egreso",
+      "id": 8
+    },
+    {
+      "valor": "100",
+      "caja": "egreso",
+      "id": 9
+    },
+    {
+      "valor": "200",
+      "caja": "ingreso",
+      "id": 10
+    },
+    {
+      "valor": "10200",
+      "caja": "ingreso",
+      "id": 11
+    },
+    {
+      "valor": "2000",
+      "caja": "egreso",
+      "id": 12
+    }
+  ]
 }

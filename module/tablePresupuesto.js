@@ -1,8 +1,7 @@
-export const createTable = (data) => {
+export const mostrarBusqueda = (data) => {
     let tbody = document.createElement("TBODY");
-    tbody.classList.add("contenido")
     let rows = data.map(e => `
-    <tr class="fila">
+    <tr class="fila" data-id="${e.id}">
         <td>${e.id}</td>
         <td class="movimiento">${e.caja}</td>
         <td class="valor" data-value="${e.valor}">$ ${e.valor}</td>
@@ -26,20 +25,10 @@ export const createTable = (data) => {
 
 export const calcularMovimientos = (filas) => {
     if (filas.length === 0) return {};
-    let ingresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "ingreso" ? Number(e.querySelector(".valor").dataset.value) : 0);
-    let egresos = [...filas].map(e => e.querySelector(".movimiento").textContent === "egreso" ? Number(e.querySelector(".valor").dataset.value) : 0);
+    let ingresos = [...filas].map(e => e.caja === "ingreso" ? Number(e.valor) : 0);
+    let egresos = [...filas].map(e => e.caja === "egreso" ? Number(e.valor) : 0);
 
     ingresos = ingresos.reduce((prev, curr) => prev + curr);
     egresos = egresos.reduce((prev, curr) => prev + curr);
     return [ingresos, egresos, (ingresos - egresos)];
-}
-
-export const cargarTabla = async ({ uri, config, table }) => {
-    let res = await fetch(uri, config);
-    if (res.ok) {
-        let data = await res.json();
-        data = data.constructor.name === "Array" ? data : [data];
-        let tbody = createTable(data);
-        table.querySelector("tbody").replaceWith(tbody);
-    }
 }

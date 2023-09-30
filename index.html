@@ -15,37 +15,48 @@
 
 <body>
     <div class="container">
-        <main>
-            <h1 class="text-center">Presupuesto Casa</h1>
-            <div class="container-fluid">
+        <main class="mb-5">
+            <div class="p-2">
+                <h1 class="text-center text-bg-dark p-2">Presupuesto Casa</h1>
+            </div>
+            <div class="container-fluid ps-5">
                 <h3>Agregar</h3>
                 <div class="my-3">
-                    <form action="" id="frm-caja">
-                        <input type="number" class="form-control w-auto d-inline-block" name="valor"
-                            placeholder="Ingrese el monto." required>
-                        <input type="radio" id="radio_ingreso" name="caja" value="ingreso" required>
-                        <label for="radio_ingreso">Ingreso</label>
-                        <input type="radio" id="radio_egreso" name="caja" value="egreso" required>
-                        <label for="radio_egreso">Egreso</label>
-                        <input type="submit" value="Calcular" class="btn btn-primary">
+                    <form action="" id="frm-caja"
+                        class="d-flex flex-column flex-sm-row align-items-sm-center column-gap-2 row-gap-2">
+                        <div>
+                            <input type="number" class="form-control w-auto d-inline-block" name="valor"
+                                placeholder="Ingrese el monto..." required>
+                        </div>
+                        <div>
+                            <input type="radio" id="radio_ingreso" name="caja" value="ingreso" required>
+                            <label for="radio_ingreso">Ingreso</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="radio_egreso" name="caja" value="egreso" required>
+                            <label for="radio_egreso">Egreso</label>
+                        </div>
+                        <div>
+                            <input type="submit" value="Calcular" class="btn btn-primary">
+                        </div>
                     </form>
                 </div>
             </div>
-
-            <div class="container-fluid">
+            <hr>
+            <div class="container-fluid ps-5">
                 <h3>Registros</h3>
                 <input id="inp-search" class="form-control w-auto" type="number" name="buscar"
                     placeholder="Id a buscar..." />
             </div>
 
             <div class="container-fluid py-3">
-                <table class="tabla-movimientos table table-hover">
+                <table class="tabla-movimientos table table-hover text-center">
                     <thead>
-                        <tr>
-                            <td class="fw-bold">#</td>
-                            <td class="fw-bold">Movimiento</td>
-                            <td class="fw-bold">Valor</td>
-                            <td class="fw-bold">Funciones</td>
+                        <tr class="table-dark">
+                            <td class="fw-bold col-2">#</td>
+                            <td class="fw-bold col-2">Movimiento</td>
+                            <td class="fw-bold col-2">Valor</td>
+                            <td class="fw-bold col-2">Funciones</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -62,6 +73,17 @@
                                 </button>
                             </td>
                             <td>
+                                <span>Mostrar</span>
+                                <select id="limit-entries">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <span>registros</span>
+                            </td>
+                            <td></td>
+                            <td>
                                 <button id="btn-next" class="btn btn-warning">
                                     Next Page
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -77,9 +99,9 @@
             </div>
 
             <div class="movimientos d-flex flex-row flex-wrap">
-                <span class="w-100 text-end"><b>Ingresos: </b><span id="ingresos"></span></span>
-                <span class="w-100 text-end"><b>Egresos: </b><span id="egresos"></span></span>
-                <span class="w-100 text-end"><b>Total: </b> <span id="total"></span></span>
+                <span class="w-100 text-end text-success fs-5"><b>Ingresos: </b><span id="ingresos"></span></span>
+                <span class="w-100 text-end text-danger fs-5"><b>Egresos: </b><span id="egresos"></span></span>
+                <span class="w-100 text-end fs-5"><b>Total: </b> <span id="total"></span></span>
             </div>
 
             <dialog id="modal-edit">
@@ -100,8 +122,8 @@
                 </form>
             </dialog>
         </main>
-        <footer class="fixed-bottom bottom-0 text-center">
-            <small>Jaider Mendoza &copy; - Todos los Derechos Reservados</small>
+        <footer class="fixed-bottom bottom-0 text-center text-bg-dark p-2">
+            <span><small>Jaider Mendoza &copy;</small> - Todos los Derechos Reservados</span>
         </footer>
     </div>
 </body>

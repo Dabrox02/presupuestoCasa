@@ -1,122 +1,122 @@
-import { calcularMovimientos, cargarTabla } from "./module/tablePresupuesto.js";
-import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
+import { calcularMovimientos, mostrarBusqueda } from "./module/tablePresupuesto.js";
+import { mostrarPagina, paginaAnterior, paginaSiguiente, limiteRegistros, calcularPagina } from "./module/paginacion.js";
 
 const d = document;
-const URI = "https://6509d045f6553137159c106b.mockapi.io/presupuesto";
-const form = d.querySelector("#frm-caja");
-const form_edit = d.querySelector("#frm-edit");
-const input_search = d.querySelector("#inp-search");
-const modal_edit = d.querySelector("#modal-edit");
-const btn_close_modal = d.querySelectorAll(".close-modal");
-const table = d.querySelector(".tabla-movimientos");
-const btn_prev = d.querySelector("#btn-prev");
-const btn_next = d.querySelector("#btn-next");
-const ingresos = d.querySelector("#ingresos");
-const egresos = d.querySelector("#egresos");
-const total = d.querySelector("#total");
-
-var config = {
-    headers: { "content-type": "application/json" },
-}
-var table_config = {
+const ls = localStorage;
+const $ = (e) => document.querySelector(e);
+const URI = "http://localhost:5855/presupuesto";
+const table_config = {
     "current_page": 1,
-    "length": 10,
+    "length": 5,
     "max_page": 1
 }
-var filas;
 
 addEventListener("DOMContentLoaded", async (e) => {
-
-    await cargarTabla({
-        "uri": URI,
-        "table": table
-    });
-    let btns_del = d.querySelectorAll(".del-caja");
-    let btns_edit = d.querySelectorAll(".edit-caja");
-
-    btns_del.forEach((e) => {
-        config["method"] = "DELETE";
-        let valor = e.dataset.del;
-        e.addEventListener("click", async (e) => {
-            await fetch(`${URI}/${valor}`, config);
-            window.location.reload();
-        })
-    })
-
-    btns_edit.forEach((e) => {
-        e.addEventListener("click", async (j) => {
-            form_edit.dataset.edit = e.dataset.edit;
-            modal_edit.showModal();
-            let data = await (await fetch(`${URI}/${e.dataset.edit}`)).json();
-            d.querySelector("#monto-edit").value = data.valor;
-            data.caja == "ingreso" ? d.querySelector("#radio-ingreso-edit").setAttribute("checked", "") : d.querySelector("#radio-egreso-edit").setAttribute("checked", "");
-        })
-    })
-
-    btn_close_modal.forEach((e) => {
-        e.addEventListener("click", (j) => {
-            const dialogo = j.target.closest("dialog");
-            form_edit.reset();
-            form_edit.removeAttribute("data-edit");
-            if (dialogo) modal_edit.close();
-        })
-    })
-
-
-    filas = document.querySelectorAll(".fila");
-    table_config.max_page = Math.ceil(filas.length / table_config.length);
+    table_config.length = ls.getItem("length-entries") ? Number(ls.getItem("length-entries")) : 5;
+    $("#limit-entries").value = ls.getItem("length-entries") ? Number(ls.getItem("length-entries")) : table_config.length;
+    let filas = await (await fetch(URI)).json();
+    calcularPagina(filas, table_config);
     mostrarPagina(filas, table_config.current_page, table_config.length);
     let movimientos = calcularMovimientos(filas);
-    ingresos.textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
-    egresos.textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
-    total.textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
+    $("#ingresos").textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
+    $("#egresos").textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
+    $("#total").textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
+    movimientos[2] != 0 ? (movimientos[2] > 0 ? $("#total").parentElement.classList.add("text-success") : $("#total").parentElement.classList.add("text-danger")) : "";
 })
 
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    config["method"] = "POST";
-    let data = Object.fromEntries(new FormData(e.target));
-    if (!isNaN(Number(data.valor))) {
-        config["body"] = JSON.stringify(data);
-        let res = await fetch(URI, config);
-        form.reset();
+d.addEventListener("click", async (e) => {
+    if (e.target.matches("#btn-prev, #btn-prev *")) {
+        paginaAnterior(table_config);
+        let filas = await (await fetch(URI)).json();
+        calcularPagina(filas, table_config);
+        mostrarPagina(filas, table_config.current_page, table_config.length);
+    }
+
+    if (e.target.matches("#btn-next, #btn-next *")) {
+        paginaSiguiente(table_config);
+        let filas = await (await fetch(URI)).json();
+        calcularPagina(filas, table_config);
+        mostrarPagina(filas, table_config.current_page, table_config.length);
+    }
+
+    if (e.target.matches(".close-modal, .close-modal *")) {
+        const dialogo = e.target.closest("dialog");
+        $("#frm-edit").removeAttribute("data-edit");
+        if (dialogo) dialogo.close();
+    }
+
+    if (e.target.matches(".del-caja, .del-caja *")) {
+        let btn = e.target.closest(".del-caja");
+        let valor = btn.dataset.del;
+        await fetch(`${URI}/${valor}`, {
+            method: "DELETE"
+        });
         window.location.reload();
+    }
+
+    if (e.target.matches(".edit-caja, .edit-caja *")) {
+        let btn = e.target.closest(".edit-caja");
+        $("#frm-edit").dataset.edit = btn.dataset.edit;
+        $("#modal-edit").showModal();
+        let data = await (await fetch(`${URI}/${btn.dataset.edit}`)).json();
+        d.querySelector("#monto-edit").value = data.valor;
+        data.caja == "ingreso" ? d.querySelector("#radio-ingreso-edit").setAttribute("checked", "") : d.querySelector("#radio-egreso-edit").setAttribute("checked", "");
     }
 })
 
-form_edit.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    config["method"] = "PUT";
-    let data = Object.fromEntries(new FormData(e.target));
-    if (!isNaN(Number(data.valor))) {
-        config["body"] = JSON.stringify(data);
-        if (!form_edit.dataset.edit) return;
-        let res = await fetch(`${URI}/${form_edit.dataset.edit}`, config);
-        window.location.reload();
+d.addEventListener("submit", async (e) => {
+    if (e.target.matches("#frm-caja")) {
+        e.preventDefault();
+        let data = Object.fromEntries(new FormData(e.target));
+        if (!isNaN(Number(data.valor))) {
+            let res = await fetch(URI, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            form.reset();
+            window.location.reload();
+        }
+    }
+
+    if (e.target.matches("#frm-edit")) {
+        e.preventDefault();
+        let data = Object.fromEntries(new FormData(e.target));
+        if (!isNaN(Number(data.valor))) {
+            if (!$("#frm-edit").dataset.edit) return;
+            console.log(`${URI}/${$("#frm-edit").dataset.edit}`);
+            let res = await fetch(`${URI}/${$("#frm-edit").dataset.edit}`, {
+                method: "PUT",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            window.location.reload();
+        }
+    }
+
+})
+
+d.addEventListener("input", async (e) => {
+    if (e.target.matches("#inp-search")) {
+        e.preventDefault();
+        const valorInput = e.target.value;
+        if (valorInput !== "") {
+            let data = await (await fetch(URI)).json();
+            let elementos = data.filter((e) => String(e.id).startsWith(valorInput));
+            mostrarBusqueda(elementos);
+        } else {
+            let filas = await (await fetch(URI)).json();
+            mostrarPagina(filas, table_config.current_page, table_config.length);
+        }
     }
 })
 
-input_search.addEventListener("input", async (e) => {
-    e.preventDefault();
-    const valorInput = input_search.value;
-    if (valorInput !== "") {
-        await cargarTabla({
-            "uri": `${URI}/${valorInput}`, "table": table
-        });
-    } else {
-        await cargarTabla({
-            "uri": URI, "table": table
-        });
+d.addEventListener("change", async (e) => {
+    if (e.target.matches("#limit-entries")) {
+        ls.setItem("length-entries", e.target.value);
+        limiteRegistros(table_config, Number(e.target.value));
+        let filas = await (await fetch(URI)).json();
+        table_config.current_page = 1;
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 })
-
-
-btn_prev.addEventListener("click", (e) => {
-    paginaAnterior(table_config);
-    mostrarPagina(filas, table_config.current_page, table_config.length);
-});
-btn_next.addEventListener("click", (e) => {
-    paginaSiguiente(table_config);
-    mostrarPagina(filas, table_config.current_page, table_config.length);
-});

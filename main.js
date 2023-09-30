@@ -93,9 +93,8 @@ d.addEventListener("input", async (e) => {
         const valorInput = e.target.value;
         if (valorInput !== "") {
             let data = await (await fetch(URI)).json();
-
-            console.log(data);
-
+            let elementos = data.filter((e) => String(e.id).startsWith(valorInput));
+            mostrarBusqueda(elementos);
         } else {
             let filas = await (await fetch(URI)).json();
             mostrarPagina(filas, table_config.current_page, table_config.length);

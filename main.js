@@ -21,7 +21,7 @@ addEventListener("DOMContentLoaded", async (e) => {
     $("#ingresos").textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
     $("#egresos").textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
     $("#total").textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
-    $("#total").parentElement.classList.add(movimientos[2] != 0 ? movimientos[2] > 0 ? "text-success" : "text-danger" : "")
+    movimientos[2] != 0 ? (movimientos[2] > 0 ? $("#total").parentElement.classList.add("text-success") : $("#total").parentElement.classList.add("text-danger")) : "";
 })
 
 d.addEventListener("click", async (e) => {
@@ -67,11 +67,13 @@ d.addEventListener("click", async (e) => {
 d.addEventListener("submit", async (e) => {
     if (e.target.matches("#frm-caja")) {
         e.preventDefault();
-        config["method"] = "POST";
         let data = Object.fromEntries(new FormData(e.target));
         if (!isNaN(Number(data.valor))) {
-            config["body"] = JSON.stringify(data);
-            let res = await fetch(URI, config);
+            let res = await fetch(URI, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(data)
+            });
             form.reset();
             window.location.reload();
         }
@@ -79,12 +81,15 @@ d.addEventListener("submit", async (e) => {
 
     if (e.target.matches("#frm-edit")) {
         e.preventDefault();
-        config["method"] = "PUT";
         let data = Object.fromEntries(new FormData(e.target));
         if (!isNaN(Number(data.valor))) {
-            config["body"] = JSON.stringify(data);
             if (!$("#frm-edit").dataset.edit) return;
-            let res = await fetch(`${URI}/${$("#frm-edit").dataset.edit}`, config);
+            console.log(`${URI}/${$("#frm-edit").dataset.edit}`);
+            let res = await fetch(`${URI}/${$("#frm-edit").dataset.edit}`, {
+                method: "PUT",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(data)
+            });
             window.location.reload();
         }
     }

@@ -21,6 +21,7 @@ addEventListener("DOMContentLoaded", async (e) => {
     $("#ingresos").textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
     $("#egresos").textContent = "$ " + (movimientos[1] ? movimientos[1] : "0");
     $("#total").textContent = "$ " + (movimientos[2] ? movimientos[2] : "0");
+    $("#total").parentElement.classList.add(movimientos[2] != 0 ? movimientos[2] > 0 ? "text-success" : "text-danger" : "")
 })
 
 d.addEventListener("click", async (e) => {
@@ -108,8 +109,9 @@ d.addEventListener("input", async (e) => {
 d.addEventListener("change", async (e) => {
     if (e.target.matches("#limit-entries")) {
         ls.setItem("length-entries", e.target.value);
-        limiteRegistros(table_config, e.target.value);
+        limiteRegistros(table_config, Number(e.target.value));
         let filas = await (await fetch(URI)).json();
+        table_config.current_page = 1;
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 })

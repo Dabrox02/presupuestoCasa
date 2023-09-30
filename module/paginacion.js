@@ -36,3 +36,11 @@ export const paginaAnterior = (table_config) => {
 export const paginaSiguiente = (table_config) => {
     table_config.current_page < table_config.max_page ? table_config.current_page += 1 : table_config;
 }
+
+export const limiteRegistros = (table_config, value) => {
+    table_config.length = value;
+}
+
+export const calcularPagina = (filas, table_config) => {
+    table_config.max_page = Math.ceil(filas.length / table_config.length);
+}

@@ -1,19 +1,21 @@
 import { calcularMovimientos, mostrarBusqueda } from "./module/tablePresupuesto.js";
-import { mostrarPagina, paginaAnterior, paginaSiguiente } from "./module/paginacion.js";
+import { mostrarPagina, paginaAnterior, paginaSiguiente, limiteRegistros, calcularPagina } from "./module/paginacion.js";
 
 const d = document;
+const ls = localStorage;
 const $ = (e) => document.querySelector(e);
 const URI = "http://localhost:5855/presupuesto";
-
-var table_config = {
+const table_config = {
     "current_page": 1,
-    "length": 10,
+    "length": 5,
     "max_page": 1
 }
 
 addEventListener("DOMContentLoaded", async (e) => {
+    table_config.length = ls.getItem("length-entries") ? Number(ls.getItem("length-entries")) : 5;
+    $("#limit-entries").value = ls.getItem("length-entries") ? Number(ls.getItem("length-entries")) : table_config.length;
     let filas = await (await fetch(URI)).json();
-    table_config.max_page = Math.ceil(filas.length / table_config.length);
+    calcularPagina(filas, table_config);
     mostrarPagina(filas, table_config.current_page, table_config.length);
     let movimientos = calcularMovimientos(filas);
     $("#ingresos").textContent = "$ " + (movimientos[0] ? movimientos[0] : "0");
@@ -25,12 +27,14 @@ d.addEventListener("click", async (e) => {
     if (e.target.matches("#btn-prev, #btn-prev *")) {
         paginaAnterior(table_config);
         let filas = await (await fetch(URI)).json();
+        calcularPagina(filas, table_config);
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 
     if (e.target.matches("#btn-next, #btn-next *")) {
         paginaSiguiente(table_config);
         let filas = await (await fetch(URI)).json();
+        calcularPagina(filas, table_config);
         mostrarPagina(filas, table_config.current_page, table_config.length);
     }
 
@@ -86,7 +90,6 @@ d.addEventListener("submit", async (e) => {
 
 })
 
-
 d.addEventListener("input", async (e) => {
     if (e.target.matches("#inp-search")) {
         e.preventDefault();
@@ -102,4 +105,11 @@ d.addEventListener("input", async (e) => {
     }
 })
 
-
+d.addEventListener("change", async (e) => {
+    if (e.target.matches("#limit-entries")) {
+        ls.setItem("length-entries", e.target.value);
+        limiteRegistros(table_config, e.target.value);
+        let filas = await (await fetch(URI)).json();
+        mostrarPagina(filas, table_config.current_page, table_config.length);
+    }
+})
